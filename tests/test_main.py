@@ -158,6 +158,3 @@ def test_deleted_task_no_longer_in_list(client):
 def test_delete_nonexistent_task_returns_404(client):
     res = client.delete("/api/tasks/999")
     assert res.status_code == 404
-
-def test_intentionally_failing():
-    assert 1 == 2  # intentional failure to verify CI gate
