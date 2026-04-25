@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -26,3 +26,11 @@ jobs:
 
       - name: Run tests with pytest
         run: pytest
+
+  deploy-green:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to green Render
+        run: curl ${{ secrets.RENDER_GREEN_DEPLOY_HOOK }}
