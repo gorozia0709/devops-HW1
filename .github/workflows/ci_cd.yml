@@ -27,10 +27,45 @@ jobs:
       - name: Run tests with pytest
         run: pytest
 
-  deploy-green:
+  deploy:
     needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to green Render
-        run: curl ${{ secrets.RENDER_GREEN_DEPLOY_HOOK }}
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Read current environment
+        id: env
+        run: |
+          CURRENT=$(cat deploy-state.txt)
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+
+      - name: Decide next environment
+        id: next
+        run: |
+          if [ "${{ steps.env.outputs.current }}" = "blue" ]; then
+            echo "next=green" >> $GITHUB_OUTPUT
+          else
+            echo "next=blue" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to selected Render environment
+        run: |
+          if [ "${{ steps.next.outputs.next }}" = "green" ]; then
+            curl ${{ secrets.RENDER_GREEN_DEPLOY_HOOK }}
+          else
+            curl ${{ secrets.RENDER_BLUE_DEPLOY_HOOK }}
+          fi
+
+      - name: Update state file
+        run: |
+          echo "${{ steps.next.outputs.next }}" > deploy-state.txt
+
+      - name: Commit updated state
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add deploy-state.txt
+          git commit -m "update deploy state"
+          git push
