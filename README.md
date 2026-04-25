@@ -131,28 +131,28 @@ This approach ensures a fast rollback without redeploying the application.
 ### 1. GitHub Actions Successful Pipeline
 - CI passing (tests successful)
 
-<img src="image.png" width="600"/>
+<img src="images/ci-success.png" width="600"/>
 
 - Deployment job executed successfully
 
-<img src="image-1.png" width="600"/>
+<img src="images/cd-success.png" width="600"/>
 
 ### 2. Test Execution Logs
 - PyTest running and passing
 
-<img src="image-2.png" width="600"/>
+<img src="images/tests-passing.png" width="600"/>
 
 ### 3. Render Dashboard
 
-<img src="image-5.png" width="600"/>
+<img src="images/render-dashboard.png" width="600"/>
 
 - Blue Service (Before update)
 
-<img src="image-4.png" width="600"/>
+<img src="images/blue-service.png" width="600"/>
 
 - Green Service (After update)
 
-<img src="image-3.png" width="600"/>
+<img src="images/green-service.png" width="600"/>
 
 
 
